@@ -16,7 +16,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.exelon.ews.mcoe.exelonJobFairs.MainActivity;
+import com.exelon.ews.mcoe.exelonJobFairs.ExelonLink;
 import com.exelon.ews.mcoe.exelonJobFairs.R;
 
 /**
@@ -55,7 +55,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		}
 
 		// Create onClick for toast notification
-		Intent onClick = new Intent(context, MainActivity.class)
+		Intent onClick = new Intent(context, ExelonLink.class)
 			.putExtra(AlarmReceiver.NOTIFICATION_ID, notificationId);
 		// Create pending intent for onClick
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, onClick, PendingIntent.FLAG_CANCEL_CURRENT);
