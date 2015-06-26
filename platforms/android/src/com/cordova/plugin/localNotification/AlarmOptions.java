@@ -25,6 +25,7 @@ public class AlarmOptions {
     private String notificationId = "";
     private String smallIcon = "";
     private String largeIcon = "";
+    private String className = "";
 
     /**
      * Instantiates object based on the options object
@@ -78,6 +79,7 @@ public class AlarmOptions {
             } 
 
 	        this.alarmTicker = options.optString("ticker");
+          this.className = options.optString("className");
 	        this.repeatDaily = options.optBoolean("repeatDaily");
 	        this.notificationId = options.optString("id");
 	    }
@@ -126,6 +128,10 @@ public class AlarmOptions {
     public String getLargeIcon() { return this.largeIcon; }
 
     public void setLargeIcon(String icon) { this.largeIcon = icon; }
+
+    public String getClassName() { return this.className; }
+
+    public void setClassName(String className) { this.className = className; }
 
     public void setRepeatDaily(boolean repeatDaily) {
 	this.repeatDaily = repeatDaily;

@@ -53,7 +53,7 @@ public class AlarmHelper extends Activity {
      * @see LocalNotification#add(boolean, String, String, String, int, Calendar)
      */
     public boolean addAlarm(String alarmTitle, String alarmSubTitle, String alarmTicker,
-        String notificationId, String smallIcon, String largeIcon, Long seconds) {
+        String notificationId, String smallIcon, String largeIcon, Long seconds, String className) {
         long triggerTime = seconds;
 
         Intent intent = new Intent(this.ctx, AlarmReceiver.class)
@@ -64,6 +64,7 @@ public class AlarmHelper extends Activity {
             .putExtra(AlarmReceiver.SMALL_ICON, smallIcon)
             .putExtra(AlarmReceiver.LARGE_ICON, largeIcon)
             .putExtra(AlarmReceiver.NOTIFICATION_ID, notificationId)
+            .putExtra(AlarmReceiver.ACTIVITY_CLASS, className)
 			      .putExtra("externalIcon", false);
 
         PendingIntent sender = PendingIntent.getBroadcast(this.ctx, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);

@@ -64,9 +64,9 @@ public class LocalNotification extends CordovaPlugin {
 
             try {               
                 long seconds = System.currentTimeMillis() + (args.getJSONObject(1).getLong("seconds") * 1000);
-                String title, ticker, message, smallIcon, largeIcon;
+                String title, ticker, message, smallIcon, largeIcon, className;
                 
-                smallIcon = largeIcon =  title = ticker = message = "";
+                smallIcon = largeIcon =  title = ticker = message = className = "";
                 if (args.getJSONObject(1).has("title")) {
                     title = args.getJSONObject(1).getString("title");
                 }
@@ -82,11 +82,14 @@ public class LocalNotification extends CordovaPlugin {
                 if (args.getJSONObject(1).has("message")) {
                     message = args.getJSONObject(1).getString("message");
                 }
+                if (args.getJSONObject(1).has("className")) {
+                    className = args.getJSONObject(1).getString("className");
+                }
 
                 persistAlarm(alarmId, args);
   				      return this.add(callbackContext, title.isEmpty() ? "Notification" : title,
                           message, ticker.isEmpty() ? message : ticker,
-                          alarmId, smallIcon, largeIcon, seconds);
+                          alarmId, smallIcon, largeIcon, seconds, className);
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e);
             }
@@ -119,9 +122,9 @@ public class LocalNotification extends CordovaPlugin {
      *            should first be started
      */
     public Boolean add(CallbackContext callbackContext, String alarmTitle, String alarmSubTitle, String alarmTicker,
-        String alarmId, String smallIcon, String largeIcon, long seconds) {
+        String alarmId, String smallIcon, String largeIcon, long seconds, String className) {
 
-        boolean result = alarm.addAlarm(alarmTitle, alarmSubTitle, alarmTicker, alarmId, smallIcon, largeIcon, seconds);
+        boolean result = alarm.addAlarm(alarmTitle, alarmSubTitle, alarmTicker, alarmId, smallIcon, largeIcon, seconds, className);
         
         if (result) {
             callbackContext.success();

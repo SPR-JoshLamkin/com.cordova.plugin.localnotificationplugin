@@ -34,6 +34,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 	public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
 	public static final String SMALL_ICON = "SMALL_ALARM_ICON";
 	public static final String LARGE_ICON = "LARGE_ALARM_ICON";
+	public static final String ACTIVITY_CLASS = "ACTIVITY_CLASS";
 
 	/* Contains time in 24hour format 'HH:mm' e.g. '04:30' or '18:23' */
 	public static final String HOUR_OF_DAY = "HOUR_OF_DAY";
@@ -55,8 +56,15 @@ public class AlarmReceiver extends BroadcastReceiver {
 		}
 
 		// Create onClick for toast notification
-		Intent onClick = new Intent(context, ExelonLink.class)
-			.putExtra(AlarmReceiver.NOTIFICATION_ID, notificationId);
+		Intent onClick = null;
+    if (bundle.containsKey(ACTIVITY_CLASS)) {
+      try {
+        onClick = new Intent(context, Class.forName(bundle.getString(ACTIVITY_CLASS))).putExtra(AlarmReceiver.NOTIFICATION_ID, notificationId);
+      } catch (ClassNotFoundException e) {
+        
+      }
+    }
+			
 		// Create pending intent for onClick
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, onClick, PendingIntent.FLAG_CANCEL_CURRENT);
 

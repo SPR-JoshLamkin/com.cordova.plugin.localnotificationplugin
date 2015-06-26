@@ -43,7 +43,8 @@ public class AlarmRestoreOnBoot extends BroadcastReceiver {
                         options.getNotificationId(),
                         options.getSmallIcon(),
                         options.getLargeIcon(),
-                        options.getCal().getTimeInMillis());
+                        options.getCal().getTimeInMillis(),
+                        options.getClassName());
 
             } catch (JSONException e) {
                 Log.d(LocalNotification.TAG,
