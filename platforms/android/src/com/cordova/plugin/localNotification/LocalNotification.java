@@ -64,42 +64,29 @@ public class LocalNotification extends CordovaPlugin {
 
             try {               
                 long seconds = System.currentTimeMillis() + (args.getJSONObject(1).getLong("seconds") * 1000);
-                String title, ticker, icon;
-                int iconResource = 0;
-
-                title = ticker = icon = "";
-                try {
+                String title, ticker, message, smallIcon, largeIcon;
+                
+                smallIcon = largeIcon =  title = ticker = message = "";
+                if (args.getJSONObject(1).has("title")) {
                     title = args.getJSONObject(1).getString("title");
-                } catch (Exception e){}
-                try {
+                }
+                if (args.getJSONObject(1).has("ticker")) {
                     ticker = args.getJSONObject(1).getString("ticker");
-                } catch (Exception e){}
-                try {
-                    icon = args.getJSONObject(1).getString("icon");
-                } catch (Exception e) {
-					icon="";
-				}
-
-
-                if (icon != "") {
-                    try {
-                        iconResource = cordova.getActivity().getResources().getIdentifier(icon, "drawable", cordova.getActivity().getPackageName());
-                    } catch(Exception e) {
-                        Log.e(TAG, "The icon resource couldn't be found. Taking default icon.");
-                    }
+                }
+                if (args.getJSONObject(1).has("iconSmall")) {
+                    smallIcon = args.getJSONObject(1).getString("iconSmall");
+                }
+                if (args.getJSONObject(1).has("iconLarge")) {
+                    largeIcon = args.getJSONObject(1).getString("iconLarge");
+                }
+                if (args.getJSONObject(1).has("message")) {
+                    message = args.getJSONObject(1).getString("message");
                 }
 
                 persistAlarm(alarmId, args);
-				if(icon!=""){
-                return this.add(callbackContext, title == "" ? "Notification" : title,
-                        args.getJSONObject(1).getString("message"), ticker == "" ? args.getJSONObject(1).getString("message") : ticker,
-                        alarmId.toString(), icon, seconds);
-					}else{
-					return this.add(callbackContext, title == "" ? "Notification" : title,
-                        args.getJSONObject(1).getString("message"), ticker == "" ? args.getJSONObject(1).getString("message") : ticker,
-                        alarmId.toString(), 1, seconds);
-					
-					}
+  				      return this.add(callbackContext, title.isEmpty() ? "Notification" : title,
+                          message, ticker.isEmpty() ? message : ticker,
+                          alarmId, smallIcon, largeIcon, seconds);
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e);
             }
@@ -132,9 +119,9 @@ public class LocalNotification extends CordovaPlugin {
      *            should first be started
      */
     public Boolean add(CallbackContext callbackContext, String alarmTitle, String alarmSubTitle, String alarmTicker,
-        String alarmId, int icon, long seconds) {
+        String alarmId, String smallIcon, String largeIcon, long seconds) {
 
-        boolean result = alarm.addAlarm(alarmTitle, alarmSubTitle, alarmTicker, alarmId, icon, seconds);
+        boolean result = alarm.addAlarm(alarmTitle, alarmSubTitle, alarmTicker, alarmId, smallIcon, largeIcon, seconds);
         
         if (result) {
             callbackContext.success();
@@ -144,22 +131,6 @@ public class LocalNotification extends CordovaPlugin {
             return false;
         }
     }
-
-	public Boolean add(CallbackContext callbackContext, String alarmTitle,
-			String alarmSubTitle, String alarmTicker, String alarmId,
-			Object icon, long seconds) {
-
-		boolean result = alarm.addAlarm(alarmTitle, alarmSubTitle, alarmTicker,
-				alarmId, (String) icon, seconds);
-
-		if (result) {
-			callbackContext.success();
-			return true;
-		} else {
-			callbackContext.error("Add notification failed.");
-			return false;
-		}
-	}
 
     /**
      * Cancel a specific notification that was previously registered.
@@ -231,7 +202,7 @@ public class LocalNotification extends CordovaPlugin {
         return  cordova.getActivity().getApplicationContext()
                                      .getSharedPreferences(TAG, Context.MODE_PRIVATE)
                                      .edit()
-                                     .putString(alarmId.toString(), optionsArr.toString())
+                                     .putString(alarmId, optionsArr.toString())
                                      .commit();
     }
 

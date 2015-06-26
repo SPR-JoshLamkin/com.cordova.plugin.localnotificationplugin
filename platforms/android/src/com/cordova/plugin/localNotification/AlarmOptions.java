@@ -23,7 +23,8 @@ public class AlarmOptions {
     private String alarmTicker = "";
     private boolean repeatDaily = false;
     private String notificationId = "";
-    private int icon = 0;
+    private String smallIcon = "";
+    private String largeIcon = "";
 
     /**
      * Instantiates object based on the options object
@@ -66,12 +67,15 @@ public class AlarmOptions {
 		            this.alarmSubTitle = lines[1];
 	        }
 
-            if(options.optString("icon") != "") {
-                this.icon = context.getResources().getIdentifier(
-                        options.optString("icon"), "drawable", context.getPackageName());
+            if(!options.optString("smallIcon").isEmpty()) {
+              this.smallIcon = options.optString("smallIcon");
             } else  {
-                this.icon = android.R.drawable.btn_star_big_on;
+              this.smallIcon = "btn_star_big_on";
             }
+            
+            if(!options.optString("largeIcon").isEmpty()) {
+              this.largeIcon = options.optString("largeIcon");
+            } 
 
 	        this.alarmTicker = options.optString("ticker");
 	        this.repeatDaily = options.optBoolean("repeatDaily");
@@ -115,9 +119,13 @@ public class AlarmOptions {
 	return repeatDaily;
     }
 
-    public int getIcon() { return this.icon; }
+    public String getSmallIcon() { return this.smallIcon; }
 
-    public void setIcon(int icon) { this.icon = icon; }
+    public void setSmallIcon(String icon) { this.smallIcon = icon; }
+
+    public String getLargeIcon() { return this.largeIcon; }
+
+    public void setLargeIcon(String icon) { this.largeIcon = icon; }
 
     public void setRepeatDaily(boolean repeatDaily) {
 	this.repeatDaily = repeatDaily;

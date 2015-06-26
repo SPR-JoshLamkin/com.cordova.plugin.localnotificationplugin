@@ -17,7 +17,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.exelon.ews.mcoe.exelonJobFairs.ExelonLink;
-import com.exelon.ews.mcoe.exelonJobFairs.R;
 
 /**
  * The alarm receiver is triggered when a scheduled alarm is fired. This class
@@ -33,7 +32,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 	public static final String SUBTITLE = "ALARM_SUBTITLE";
 	public static final String TICKER_TEXT = "ALARM_TICKER";
 	public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
-	public static final String ICON = "ALARM_ICON";
+	public static final String SMALL_ICON = "SMALL_ALARM_ICON";
+	public static final String LARGE_ICON = "LARGE_ALARM_ICON";
 
 	/* Contains time in 24hour format 'HH:mm' e.g. '04:30' or '18:23' */
 	public static final String HOUR_OF_DAY = "HOUR_OF_DAY";
@@ -60,17 +60,30 @@ public class AlarmReceiver extends BroadcastReceiver {
 		// Create pending intent for onClick
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, onClick, PendingIntent.FLAG_CANCEL_CURRENT);
 
-		Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_menu_exelon);
-		Notification notification= new Notification.Builder(context)
-				.setSmallIcon(R.drawable.ic_stat_notify_exelon_alt)
-				.setLargeIcon(bm)
+    Notification.Builder notificationBuilder = new Notification.Builder(context)
 				.setContentTitle(bundle.getString(TITLE))
 				.setContentText(bundle.getString(SUBTITLE))
 				.setTicker(bundle.getString(TICKER_TEXT))
 				.setContentIntent(contentIntent)
 				.setAutoCancel(true)
-				.setWhen(System.currentTimeMillis())
-				.build();
+				.setWhen(System.currentTimeMillis());
+
+    if (bundle.containsKey(LARGE_ICON)) {
+       int resourceId = context.getResources().getIdentifier(bundle.getString(LARGE_ICON), "drawable", context.getPackageName());
+       if ( resourceId != 0) {
+         Bitmap bm = BitmapFactory.decodeResource(context.getResources(), resourceId );
+         notificationBuilder = notificationBuilder.setLargeIcon(bm);
+       }
+    }
+    
+    if (bundle.containsKey(SMALL_ICON)) {
+       int resourceId = context.getResources().getIdentifier(bundle.getString(SMALL_ICON), "drawable", context.getPackageName());
+       if ( resourceId != 0) {
+         notificationBuilder = notificationBuilder.setSmallIcon(resourceId);
+       }
+    }
+
+		Notification notification = notificationBuilder.build();
 
 		Log.d(LocalNotification.TAG, "Notification Instantiated: Title: " + bundle.getString(TITLE) + ", Sub Title: " + bundle.getString(SUBTITLE) + ", Ticker Text: " + bundle.getString(TICKER_TEXT));
 		/*

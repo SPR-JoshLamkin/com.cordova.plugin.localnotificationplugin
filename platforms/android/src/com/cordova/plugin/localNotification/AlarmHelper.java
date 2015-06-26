@@ -53,7 +53,7 @@ public class AlarmHelper extends Activity {
      * @see LocalNotification#add(boolean, String, String, String, int, Calendar)
      */
     public boolean addAlarm(String alarmTitle, String alarmSubTitle, String alarmTicker,
-        String notificationId, int icon, Long seconds) {
+        String notificationId, String smallIcon, String largeIcon, Long seconds) {
         long triggerTime = seconds;
 
         Intent intent = new Intent(this.ctx, AlarmReceiver.class)
@@ -61,32 +61,16 @@ public class AlarmHelper extends Activity {
             .putExtra(AlarmReceiver.TITLE, alarmTitle)
             .putExtra(AlarmReceiver.SUBTITLE, alarmSubTitle)
             .putExtra(AlarmReceiver.TICKER_TEXT, alarmTicker)
-            .putExtra(AlarmReceiver.ICON, icon)
+            .putExtra(AlarmReceiver.SMALL_ICON, smallIcon)
+            .putExtra(AlarmReceiver.LARGE_ICON, largeIcon)
             .putExtra(AlarmReceiver.NOTIFICATION_ID, notificationId)
-			.putExtra("externalIcon", false);
+			      .putExtra("externalIcon", false);
 
         PendingIntent sender = PendingIntent.getBroadcast(this.ctx, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         getAlarmManager().set(AlarmManager.RTC_WAKEUP, triggerTime, sender);
         return true;
     }
-	public boolean addAlarm(String alarmTitle, String alarmSubTitle, String alarmTicker,
-            String notificationId, String icon, Long seconds) {
-            long triggerTime = seconds;
-
-            Intent intent = new Intent(this.ctx, AlarmReceiver.class)
-                .setAction(notificationId)
-                .putExtra(AlarmReceiver.TITLE, alarmTitle)
-                .putExtra(AlarmReceiver.SUBTITLE, alarmSubTitle)
-                .putExtra(AlarmReceiver.TICKER_TEXT, alarmTicker)
-                .putExtra(AlarmReceiver.ICON, icon)
-                .putExtra(AlarmReceiver.NOTIFICATION_ID, notificationId)
-            .putExtra("externalIcon", true);
-
-            PendingIntent sender = PendingIntent.getBroadcast(this.ctx, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            getAlarmManager().set(AlarmManager.RTC_WAKEUP, triggerTime, sender);
-            return true;
-        }
-
+    
     /**
      * @see LocalNotification#cancelNotification(String)
      */
